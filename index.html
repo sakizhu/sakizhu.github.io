@@ -104,7 +104,6 @@
 		body{
 		    color: #333;
 			font-size:0.6rem; 
-		    /* font-size: 0.75rem; */
 			font-family: "Helvetica Neue", Helvetica, "STHeiTi", sans-serif; 
 			overflow-x:hidden; 
 			overflow-y:auto; 
@@ -120,14 +119,14 @@
 		}
 		.digit {
 			font-family: digit;
-			font-size: 5rem;
+			font-size: 3rem;
 		}
     </style>
   </head>
   <body>
 	<div id="time" class="digit" style="text-align: center;"></div>
 	
-	<div style="clear:both;">
+	<div style="clear:both;text-align: center;">
 	<h1>🍅🕰.ws<span class="ws"><img src="http://www.xinbaicn.com/waitting.png" width="100%" height="50%"/></span></h1>
 	@powered by shuaiqizhu
 	</div>
@@ -135,9 +134,9 @@
 window.onload=function ()
 {
 	var now_time = Date.parse(new Date());
-	var begin_time = Date.parse(new Date("2016-12-08 04:20:27"));
+	var time = "2016-12-08 04:20:27";
+	var begin_time = Date.parse(new Date(time.replace(' ', 'T')));
 	var diff_time = (now_time - begin_time) / 1000;
-		
 	setInterval(function() {diff_time = diff_time + 1;setTime(diff_time);}, 1000);
 	
 }
@@ -146,8 +145,6 @@ window.onload=function ()
 		var hour = diff_time / 3600;
 		var minutes = parseInt((diff_time % 3600) / 60);
 		var seconds = diff_time % 60;
-
-
 		document.getElementById("time").innerHTML = parseInt(hour/10).toString() + parseInt(hour%10).toString() + ":" + parseInt(minutes/10).toString() + parseInt(minutes%10).toString() + ":" + parseInt(seconds/10).toString() + parseInt(seconds%10).toString();
 	}
 </script>

@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1, user-scalable=no" />
+		<title></title>
+		<link rel="stylesheet" type="text/css" href="css/bootstrap.min.css" />
+	</head>
+
+	<body style='margin: 0;'>
+		<img width="50" height="50" src="tomato.png" style="margin-left: 0; margin-top: 0;" onclick="$('#fade').show('slow')"></img>
+		<div id="fade" style="background:url(3868329_1426342361100.jpg); background-size:cover;display:none;position:absolute;top:0%;left:0%;width:100%;height:100%;background-color:black;z-index:1;">
+			<img width="50" height="50" id='show_btn' src="tomato.png" onclick="$('#fade').hide('slow')"></img>
+
+			<canvas id="circle_timer" width="400" height="400">
+				
+			</canvas>
+
+			<div id='text_timer_div' style="position:fixed;left: 40%;top: 20%;">
+				<h1 id='timer'>25:00</h1>
+			</div>
+
+			<div id='timer_potato_list' style="clear: all;">
+				
+			</div>
+		</div>
+
+		<div class="container">
+			<div class="row">
+				<div class="col-xs-12">
+					<input type="text" class="form-control" id="potato" />
+					<div class="list-group" id='potato_list' style="margin-top: 30px;width: 100%;">
+					</div>
+				</div>
+			</div>
+
+			<footer style="position:fixed;margin-bottom: 10%;">
+				<button class="btn btn-success btn-lg" onclick="startTomato()">开始番茄</button>
+			</footer>
+
+			<script src="js/jquery-3.1.1.min.js"></script>
+			<script src="js/bootstrap.min.js"></script>
+			<script src="js/canvas.js"></script>
+			<script src="js/touch.js"></script>
+			<script type="text/javascript">
+				var potatoList = new Array;
+				var tomato_time_minutes = 25 * 60;
+				var index = 1;
+				var rest_time = tomato_time_minutes;
+				var timer_interval_id;
+				$('#potato').bind('keypress', function(event) {
+					if(event.keyCode == "13") {
+						addPotato();
+					}
+				})
+
+				function addPotato() {
+					if(potatoList.length >= 5) {
+						alert('任务虽好，但不要贪杯哦');
+						return;
+					}
+					$('#potato_list').append("<li class='list-group-item' id='home_task_" + index + "'>" + index + ". " + $('#potato').val() + "</li>");
+					potatoList.push($('#potato').val());
+					$('#potato').val("");
+					index++;
+
+				}
+
+				function checkStartCondition() {
+					if(potatoList.length < 1) {
+						alert('请至少添加一个任务哦');
+						return false;
+					}
+					return true;
+				}
+
+				function startTomato() {
+					if(!checkStartCondition()) {
+						return;
+					}
+					timerInit();
+					$('#fade').show('slow');
+					drawCirleTimer();
+					addPotatoToTimerPage();
+
+					timer_interval_id = setInterval("startTimer()", 1000);
+				}
+
+				function startTimer() {
+					rest_time--;
+					if(rest_time <= 0) {
+						timerEnd();	
+						return ;
+					}
+					
+					var seconds = (rest_time % 60).toString();
+					if (seconds.length < 2)
+					{
+						seconds = "0" + seconds;
+					}
+
+					$('#timer').html(parseInt(rest_time / 60).toString() + ":" + seconds);
+					var x = $('#text_timer_div').offset().left + $('#text_timer_div').width() / 2;
+					var y = $('#text_timer_div').offset().top + $('#text_timer_div').height() / 2 - $('#show_btn').height();
+					drawColorCirle(x, y, parseInt((tomato_time_minutes - rest_time) / (tomato_time_minutes) * 360), '#104E8B');
+				}
+
+				function addPotatoToTimerPage() {
+					for(var i = 1; i <= potatoList.length; i++) {
+						var id = "timer_page_task_" + i;
+						$('#timer_potato_list').append("<h1 align='center' id='" + id + "'>" + i + ". " + potatoList[i - 1] + "</h1>");
+						$('#' + id).get(0).addEventListener('touchstart', touchSatrtFunc, false);  
+		                $('#' + id).get(0).addEventListener('touchmove', touchMoveFunc, false);  
+		                $('#' + id).get(0).addEventListener('touchend', touchEndFunc, false);  
+					}
+				}
+				
+				function timerEnd()
+				{
+					clearInterval(timer_interval_id);
+					potatoList.splice(0, potatoList.length);
+					$('#potato_list').html('');
+					clearCanvas();
+					var x = $('#text_timer_div').offset().left + $('#text_timer_div').width() / 2;
+					var y = $('#text_timer_div').offset().top + $('#text_timer_div').height() / 2 - $('#show_btn').height();
+					drawColorCirle(x, y, 360, '#DBDBDB');
+				}
+				
+				function timerInit()
+				{
+					rest_time = tomato_time_minutes;
+					index = 1;
+				}
+			</script>
+	</body>
+
+</html>

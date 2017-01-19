@@ -80,8 +80,7 @@
 						return;
 					}
 					timerInit();
-					$('#fade').show('slow');
-					drawCirleTimer();
+					$('#fade').show('slow', drawCirleTimer);
 					addPotatoToTimerPage();
 
 					timer_interval_id = setInterval("startTimer()", 1000);
